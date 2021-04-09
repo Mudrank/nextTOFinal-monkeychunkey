@@ -31,11 +31,13 @@ export default class App extends React.Component {
     // })
   };
 
-  setInterval(() => {
-    this.setState({
-      word : this.state.checkWord,
-    })
-  }, 2000);
+  setInterval(this.setState({
+    word : this.state.checkWord
+  })
+
+  , 2000);
+
+  
 
 checkWWord = async () =>{
   var text = this.state.word.toLowerCase().trim();
