@@ -17,9 +17,10 @@ export default class App extends React.Component {
     super();
     this.state = {
       word: " ",
+      checkWord:'',
       chunks: [],
       displayText: "",
-      phonicSound: [],
+      phonicSounds: [],
     };
   }
 
@@ -29,6 +30,21 @@ export default class App extends React.Component {
     // displayText: a
     // })
   };
+
+  setInterval(() => {
+    this.setState({
+      word : this.state.checkWord,
+    })
+  }, 2000);
+
+checkWWord = async () =>{
+  var text = this.state.word.toLowerCase().trim();
+  db[text]?(
+  this.setState({ chunks: db[text].chunks }),
+  this.setState({ phonicSounds: db[text].phones })
+  ):
+  alert("The word does not exist in our database");
+}
 
   render() {
     return (
@@ -47,32 +63,26 @@ export default class App extends React.Component {
             placeholder="enter the chunkey"
             onChangeText={(text) => {
               this.setState({
-                word: text,
+                checkWord: text,
               });
             }}
-            value={this.state.word}
+            value={this.state.checkWord}
           />
 
           <TouchableOpacity
-            onPress={() => {
-              var text = this.state.word.toLowerCase().trim();
-              db[text]?(
-              this.setState({ chunks: db[text].chunks }),
-              this.setState({ phonicSounds: db[text].phones })
-              ):
-              alert("The word does not exist in our database");
-
-          
-            }}
+            onPress={() => 
+              this.state.word === this.state.checkWord ? alert('same word , enter a new word') :
+this.checkWWord()
+            }
           >
             <Text>Go</Text>
           </TouchableOpacity>
 
 
           <View>
-            {this.state.chunks.map((chunk , index) => {
+            {this.state.chunks.map((item , index) => {
               return (
-           <PhonicSoundBtn  wordChunk={this.state.chunks[index]} soundChunk={this.state.phonicSound[index]}/>
+           <PhonicSoundBtn  wordChunk={this.state.chunks[index]} soundChunk={this.state.phonicSounds[index]} buttonIndex={index}/>
               );
             })}
           </View>
@@ -94,4 +104,5 @@ const styles = StyleSheet.create({
     margin: 12,
     borderWidth: 1,
   },
+  
 });
